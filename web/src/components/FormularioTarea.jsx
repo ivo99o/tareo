@@ -5,7 +5,6 @@ import { NOMBRES_CATEGORIA, formatearFechaParaInput } from '../utils/tareas'
 function FormularioTarea({ tareaEnEdicion, onGuardar }) {
   const [titulo, setTitulo] = useState('')
   const [categoria, setCategoria] = useState('')
-  const [telefono, setTelefono] = useState('')
   const [fecha, setFecha] = useState('')
   const [hora, setHora] = useState('')
 
@@ -13,13 +12,11 @@ function FormularioTarea({ tareaEnEdicion, onGuardar }) {
     if (tareaEnEdicion) {
       setTitulo(tareaEnEdicion.titulo)
       setCategoria(tareaEnEdicion.categoria)
-      setTelefono(tareaEnEdicion.telefono)
       setFecha(formatearFechaParaInput(tareaEnEdicion.fechaObjetivo))
       setHora(tareaEnEdicion.fechaObjetivo.toTimeString().slice(0, 5))
     } else {
       setTitulo('')
       setCategoria('')
-      setTelefono('')
       setFecha('')
       setHora('')
     }
@@ -33,7 +30,6 @@ function FormularioTarea({ tareaEnEdicion, onGuardar }) {
     onGuardar({
       titulo: titulo.trim(),
       categoria,
-      telefono: telefono.trim(),
       fechaObjetivo,
     })
   }
@@ -64,17 +60,6 @@ function FormularioTarea({ tareaEnEdicion, onGuardar }) {
               <option key={valor} value={valor}>{nombre}</option>
             ))}
           </Form.Select>
-        </Form.Group>
-
-        <Form.Group controlId="telefono" className="campo d-flex flex-column gap-1">
-          <Form.Label className="small mb-0">Teléfono</Form.Label>
-          <Form.Control
-            type="tel"
-            value={telefono}
-            onChange={(evento) => setTelefono(evento.target.value)}
-            placeholder="Ej: 3815551234"
-            required
-          />
         </Form.Group>
 
         <Form.Group controlId="fecha" className="campo d-flex flex-column gap-1">
