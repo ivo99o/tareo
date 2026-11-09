@@ -3,7 +3,7 @@ import Swal from 'sweetalert2'
 import { calcularEstado } from '../utils/tareas'
 import { enviarAvisoWhatsApp, obtenerMensajeDeError } from '../utils/whatsapp'
 
-function useAvisosWhatsApp(tareas) {
+function useAvisosWhatsApp(tareas, avisosActivos) {
   const [, forzarActualizacion] = useState(0)
   const [avisos, setAvisos] = useState([])
   const estadosAnteriores = useRef(new Map())
@@ -15,11 +15,11 @@ function useAvisosWhatsApp(tareas) {
 
       setAvisos((actuales) => [
         ...actuales,
-        { id, fase: 'enviando', titulo: tarea.titulo, telefono: tarea.telefono, estado: estado.texto },
+        { id, fase: 'enviando', titulo: tarea.titulo, estado: estado.texto },
       ])
 
       try {
-        const respuesta = await enviarAvisoWhatsApp(tarea, estado)
+        const respuesta = await enviarAvisoWhatsApp(tarea)
 
         setAvisos((actuales) =>
           actuales.map((aviso) =>
@@ -45,7 +45,7 @@ function useAvisosWhatsApp(tareas) {
         const estadoAnterior = estadosAnteriores.current.get(tarea.id)
 
         if (estadoAnterior !== estado.texto) {
-          if (notificarCambios && estadoAnterior !== undefined) {
+          if (notificarCambios && avisosActivos && estadoAnterior !== undefined) {
             const esUrgente = estado.texto === 'AMARILLO' || estado.texto === 'NARANJA' || estado.texto === 'VENCIDA'
             if (esUrgente) {
               avisarPorWhatsApp(tarea, estado)
@@ -64,7 +64,7 @@ function useAvisosWhatsApp(tareas) {
     }, 10000)
 
     return () => clearInterval(intervalo)
-  }, [tareas])
+  }, [tareas, avisosActivos])
 
   function cerrarAviso(id) {
     setAvisos((actuales) => actuales.filter((aviso) => aviso.id !== id))
