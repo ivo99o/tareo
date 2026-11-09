@@ -24,16 +24,21 @@ function Inicio({ tareas, onGuardar, onEliminar }) {
     })
     .sort((a, b) => a.fechaObjetivo - b.fechaObjetivo)
 
-  function guardarTarea(datosTarea) {
-    onGuardar(datosTarea, idEnEdicion)
+  async function guardarTarea(datosTarea) {
+    const guardada = await onGuardar(datosTarea, idEnEdicion)
+
+    if (!guardada) {
+      return
+    }
+
     setIdEnEdicion(null)
     setSidebarAbierta(false)
   }
 
-  function eliminarTarea(id) {
-    onEliminar(id)
+  async function eliminarTarea(id) {
+    const eliminada = await onEliminar(id)
 
-    if (idEnEdicion === id) {
+    if (eliminada && idEnEdicion === id) {
       setIdEnEdicion(null)
     }
   }

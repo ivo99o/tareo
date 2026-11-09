@@ -1,11 +1,16 @@
 import AvisosWhatsApp from '../components/AvisosWhatsApp'
+import PantallaCarga from '../components/PantallaCarga'
 import useAvisosWhatsApp from '../hooks/useAvisosWhatsApp'
 import useTareas from '../hooks/useTareas'
 import Inicio from './Inicio'
 
 function PanelTareas() {
-  const { tareas, guardarTarea, eliminarTarea } = useTareas()
+  const { tareas, cargando, guardarTarea, eliminarTarea } = useTareas()
   const { avisos, cerrarAviso } = useAvisosWhatsApp(tareas)
+
+  if (cargando) {
+    return <PantallaCarga />
+  }
 
   return (
     <>
