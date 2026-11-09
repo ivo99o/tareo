@@ -45,6 +45,17 @@ function AuthProvider({ children }) {
     }
   }
 
+  async function iniciarSesionConGoogle() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    })
+
+    if (error) {
+      throw error
+    }
+  }
+
   async function cerrarSesion() {
     await supabase.auth.signOut()
   }
@@ -54,6 +65,7 @@ function AuthProvider({ children }) {
     cargando,
     registrarse,
     iniciarSesion,
+    iniciarSesionConGoogle,
     cerrarSesion,
   }
 

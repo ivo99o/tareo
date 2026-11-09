@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Alert, Button, Card, Container, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import BotonGoogle from '../components/BotonGoogle'
 import Seo from '../components/Seo'
 import useAuth from '../hooks/useAuth'
 import { obtenerMensajeDeErrorAuth } from '../utils/auth'
@@ -104,6 +105,14 @@ function Registro() {
                   {enviando ? 'Creando cuenta...' : 'Crear cuenta'}
                 </Button>
               </Form>
+
+              <div className="d-flex align-items-center gap-3 my-3 text-body-secondary small">
+                <hr className="flex-grow-1 m-0" />
+                o
+                <hr className="flex-grow-1 m-0" />
+              </div>
+
+              <BotonGoogle onError={setError} />
 
               <p className="text-center mt-4 mb-0">
                 ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link>
