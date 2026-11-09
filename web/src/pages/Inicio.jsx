@@ -1,12 +1,14 @@
 import { useState } from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row } from 'react-bootstrap'
 import Sidebar from '../components/Sidebar'
 import Filtros from '../components/Filtros'
 import ListaTareas from '../components/ListaTareas'
 import Seo from '../components/Seo'
+import useAuth from '../hooks/useAuth'
 import { calcularEstado } from '../utils/tareas'
 
 function Inicio({ tareas, onGuardar, onEliminar }) {
+  const { usuario, cerrarSesion } = useAuth()
   const [idEnEdicion, setIdEnEdicion] = useState(null)
   const [sidebarAbierta, setSidebarAbierta] = useState(false)
   const [filtroCategoriaActivo, setFiltroCategoriaActivo] = useState('todos')
@@ -60,6 +62,13 @@ function Inicio({ tareas, onGuardar, onEliminar }) {
         </Col>
 
         <Col as="section" lg={9} className="py-4 px-3 px-md-4">
+          <header className="d-flex justify-content-end align-items-center gap-3 mb-2">
+            <span className="small text-body-secondary text-truncate">{usuario.email}</span>
+            <Button variant="outline-secondary" size="sm" onClick={cerrarSesion}>
+              Cerrar sesión
+            </Button>
+          </header>
+
           <h1 className="h2 text-center mb-4">Tareas</h1>
 
           <Filtros
