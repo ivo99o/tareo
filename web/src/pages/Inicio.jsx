@@ -7,7 +7,7 @@ import Seo from '../components/Seo'
 import useAuth from '../hooks/useAuth'
 import { calcularEstado } from '../utils/tareas'
 
-function Inicio({ tareas, onGuardar, onEliminar }) {
+function Inicio({ tareas, onGuardar, onEliminar, onAbrirTelefono }) {
   const { usuario, cerrarSesion } = useAuth()
   const [idEnEdicion, setIdEnEdicion] = useState(null)
   const [sidebarAbierta, setSidebarAbierta] = useState(false)
@@ -67,8 +67,11 @@ function Inicio({ tareas, onGuardar, onEliminar }) {
         </Col>
 
         <Col as="section" lg={9} className="py-4 px-3 px-md-4">
-          <header className="d-flex justify-content-end align-items-center gap-3 mb-2">
+          <header className="d-flex flex-wrap justify-content-end align-items-center gap-2 mb-2">
             <span className="small text-body-secondary text-truncate">{usuario.email}</span>
+            <Button variant="outline-secondary" size="sm" onClick={onAbrirTelefono}>
+              Avisos por WhatsApp
+            </Button>
             <Button variant="outline-secondary" size="sm" onClick={cerrarSesion}>
               Cerrar sesión
             </Button>
