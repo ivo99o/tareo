@@ -1,13 +1,16 @@
 import axios from 'axios'
+import { supabase } from '../lib/supabase'
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL || '/api/notificar'
 
-export async function enviarAvisoWhatsApp(tarea, estado) {
-  const respuesta = await axios.post(API_URL, {
-    telefono: tarea.telefono,
-    titulo: tarea.titulo,
-    estado: estado.texto,
-  })
+export async function enviarAvisoWhatsApp(tarea) {
+  const { data } = await supabase.auth.getSession()
+
+  const respuesta = await axios.post(
+    API_URL,
+    { tareaId: tarea.id },
+    { headers: { Authorization: `Bearer ${data.session.access_token}` } },
+  )
 
   return respuesta.data
 }

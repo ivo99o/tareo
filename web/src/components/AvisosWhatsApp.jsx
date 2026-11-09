@@ -16,7 +16,7 @@ function AvisosWhatsApp({ avisos, onCerrar }) {
             <Toast.Body>
               {enviando ? (
                 <>
-                  Mandando WhatsApp a {aviso.telefono} por la tarea <strong>{aviso.titulo}</strong>.
+                  Mandando WhatsApp por la tarea <strong>{aviso.titulo}</strong>.
                 </>
               ) : (
                 <>
