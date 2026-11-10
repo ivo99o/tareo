@@ -1,15 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
-import { NOMBRES_CATEGORIA, describirTiempo, formatearDiaCorto, formatearFechaParaInput, formatearHora } from '../utils/tareas'
-import Icono from './Icono'
+import { describirTiempo, formatearDiaCorto, formatearFechaParaInput, formatearHora, horaActual } from '../utils/tareas'
+import AsistenteTarea from './AsistenteTarea'
 import BotonSelector from './BotonSelector'
-import TarjetaFechaHora from './TarjetaFechaHora'
-
-const ICONOS_CATEGORIA = {
-  laboral: 'maletin',
-  estudio: 'birrete',
-  recordatorio: 'campana',
-}
+import Icono from './Icono'
+import SelectorCategoria from './SelectorCategoria'
 
 const ATAJOS_FECHA = [
   { etiqueta: 'Hoy', dias: 0 },
@@ -25,65 +20,27 @@ function fechaDentroDeDias(dias) {
   return formatearFechaParaInput(fecha)
 }
 
-function FormularioTarea({ tareaEnEdicion, onGuardar, onCancelar }) {
-  const [titulo, setTitulo] = useState('')
-  const [categoria, setCategoria] = useState('')
-  const [fecha, setFecha] = useState('')
-  const [hora, setHora] = useState('')
-  const [errores, setErrores] = useState({})
-  const [tarjetaAbierta, setTarjetaAbierta] = useState(null)
-  const cerrarTarjeta = useCallback(() => setTarjetaAbierta(null), [])
+function FormularioTarea({ formulario, editando, onCancelar }) {
+  const { titulo, categoria, fecha, hora, errores, guardando } = formulario
+  const [pasoAbierto, setPasoAbierto] = useState(null)
+  const cerrarAsistente = useCallback(() => setPasoAbierto(null), [])
 
-  useEffect(() => {
-    setErrores({})
-
-    if (tareaEnEdicion) {
-      setTitulo(tareaEnEdicion.titulo)
-      setCategoria(tareaEnEdicion.categoria)
-      setFecha(formatearFechaParaInput(tareaEnEdicion.fechaObjetivo))
-      setHora(tareaEnEdicion.fechaObjetivo.toTimeString().slice(0, 5))
-    } else {
-      setTitulo('')
-      setCategoria('')
-      setFecha('')
-      setHora('')
+  function abrirHora() {
+    if (!fecha) {
+      setPasoAbierto('fecha')
+      return
     }
-  }, [tareaEnEdicion])
 
-  function limpiarError(campo) {
-    setErrores((actuales) => ({ ...actuales, [campo]: '' }))
-  }
+    if (!hora) {
+      formulario.cambiarHora(horaActual())
+    }
 
-  function elegirCategoria(valor) {
-    setCategoria(valor)
-    limpiarError('categoria')
-  }
-
-  function elegirFecha(valor) {
-    setFecha(valor)
-    limpiarError('fecha')
+    setPasoAbierto('hora')
   }
 
   function manejarEnvio(evento) {
     evento.preventDefault()
-
-    const nuevosErrores = {
-      titulo: titulo.trim() ? '' : 'Escribí un título para la tarea',
-      categoria: categoria ? '' : 'Elegí una categoría',
-      fecha: fecha ? '' : 'Elegí una fecha objetivo',
-    }
-
-    setErrores(nuevosErrores)
-
-    if (Object.values(nuevosErrores).some(Boolean)) {
-      return
-    }
-
-    onGuardar({
-      titulo: titulo.trim(),
-      categoria,
-      fechaObjetivo: new Date(`${fecha}T${hora || '23:59'}`),
-    })
+    formulario.enviar()
   }
 
   const fechaCompleta = fecha ? new Date(`${fecha}T${hora || '23:59'}`) : null
@@ -96,10 +53,7 @@ function FormularioTarea({ tareaEnEdicion, onGuardar, onCancelar }) {
         <Form.Control
           type="text"
           value={titulo}
-          onChange={(evento) => {
-            setTitulo(evento.target.value)
-            limpiarError('titulo')
-          }}
+          onChange={(evento) => formulario.cambiarTitulo(evento.target.value)}
           isInvalid={Boolean(errores.titulo)}
           placeholder="¿Qué tenés que hacer?"
           maxLength={120}
@@ -108,25 +62,7 @@ function FormularioTarea({ tareaEnEdicion, onGuardar, onCancelar }) {
         {errores.titulo && <p className="error-campo">{errores.titulo}</p>}
       </Form.Group>
 
-      <div className="campo-tarea">
-        <span className="etiqueta-campo" id="etiqueta-categoria">Categoría</span>
-        <div className="grupo-categorias" role="radiogroup" aria-labelledby="etiqueta-categoria">
-          {Object.entries(NOMBRES_CATEGORIA).map(([valor, nombre]) => (
-            <button
-              key={valor}
-              type="button"
-              role="radio"
-              aria-checked={categoria === valor}
-              className={`opcion-categoria ${categoria === valor ? 'activa' : ''}`}
-              onClick={() => elegirCategoria(valor)}
-            >
-              <Icono nombre={ICONOS_CATEGORIA[valor]} tam={20} />
-              <span>{nombre}</span>
-            </button>
-          ))}
-        </div>
-        {errores.categoria && <p className="error-campo">{errores.categoria}</p>}
-      </div>
+      <SelectorCategoria valor={categoria} error={errores.categoria} onElegir={formulario.cambiarCategoria} />
 
       <Form.Group controlId="fecha" className="campo-tarea">
         <Form.Label className="etiqueta-campo">Fecha objetivo</Form.Label>
@@ -136,7 +72,7 @@ function FormularioTarea({ tareaEnEdicion, onGuardar, onCancelar }) {
               key={etiqueta}
               type="button"
               className={`atajo ${fecha === fechaDentroDeDias(dias) ? 'activo' : ''}`}
-              onClick={() => elegirFecha(fechaDentroDeDias(dias))}
+              onClick={() => formulario.cambiarFecha(fechaDentroDeDias(dias))}
             >
               {etiqueta}
             </button>
@@ -152,7 +88,7 @@ function FormularioTarea({ tareaEnEdicion, onGuardar, onCancelar }) {
           }
           vacio={!fecha}
           invalido={Boolean(errores.fecha)}
-          onAbrir={() => setTarjetaAbierta('fecha')}
+          onAbrir={() => setPasoAbierto('fecha')}
         />
         {errores.fecha && <p className="error-campo">{errores.fecha}</p>}
       </Form.Group>
@@ -165,7 +101,7 @@ function FormularioTarea({ tareaEnEdicion, onGuardar, onCancelar }) {
               key={atajo}
               type="button"
               className={`atajo ${hora === atajo ? 'activo' : ''}`}
-              onClick={() => setHora(atajo)}
+              onClick={() => formulario.cambiarHora(atajo)}
             >
               {atajo}
             </button>
@@ -176,8 +112,8 @@ function FormularioTarea({ tareaEnEdicion, onGuardar, onCancelar }) {
           icono="reloj"
           texto={hora || 'Sin hora (queda 23:59)'}
           vacio={!hora}
-          onAbrir={() => setTarjetaAbierta('hora')}
-          onQuitar={() => setHora('')}
+          onAbrir={abrirHora}
+          onQuitar={() => formulario.cambiarHora('')}
         />
       </div>
 
@@ -191,22 +127,21 @@ function FormularioTarea({ tareaEnEdicion, onGuardar, onCancelar }) {
         </p>
       )}
 
-      {tarjetaAbierta && (
-        <TarjetaFechaHora
-          pasoInicial={tarjetaAbierta}
-          fecha={fecha}
-          hora={hora}
-          onCambiarFecha={elegirFecha}
-          onCambiarHora={setHora}
-          onCerrar={cerrarTarjeta}
+      {pasoAbierto && (
+        <AsistenteTarea
+          pasos={['fecha', 'hora']}
+          pasoInicial={pasoAbierto}
+          formulario={formulario}
+          editando={editando}
+          onCerrar={cerrarAsistente}
         />
       )}
 
-      <Button type="submit" variant="tareo" className="w-100 py-2 mt-2">
-        {tareaEnEdicion ? 'Guardar cambios' : 'Crear tarea'}
+      <Button type="submit" variant="tareo" className="w-100 py-2 mt-2" disabled={guardando}>
+        {guardando ? 'Guardando...' : editando ? 'Guardar cambios' : 'Crear tarea'}
       </Button>
 
-      {tareaEnEdicion && (
+      {editando && (
         <button type="button" className="cancelar-edicion" onClick={onCancelar}>
           Cancelar edición
         </button>

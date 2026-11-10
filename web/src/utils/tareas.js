@@ -97,3 +97,9 @@ export function formatearDiaCorto(fecha) {
 export function formatearHora(fecha) {
   return fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })
 }
+
+export function horaActual() {
+  const ahora = new Date()
+
+  return `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`
+}
