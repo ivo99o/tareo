@@ -13,6 +13,11 @@ function PanelTareas() {
   const { avisos, cerrarAviso } = useAvisosWhatsApp(tareas, Boolean(telefono))
   const [modalAbierto, setModalAbierto] = useState(null)
 
+  async function guardarTelefonoSinCerrar(nuevoTelefono) {
+    setModalAbierto(true)
+    return guardarTelefono(nuevoTelefono)
+  }
+
   if (cargandoTareas || cargandoPerfil) {
     return <PantallaCarga />
   }
@@ -34,7 +39,7 @@ function PanelTareas() {
       <ModalTelefono
         abierto={mostrarModal}
         telefonoActual={telefono}
-        onGuardar={guardarTelefono}
+        onGuardar={guardarTelefonoSinCerrar}
         onCerrar={() => setModalAbierto(false)}
       />
     </>
