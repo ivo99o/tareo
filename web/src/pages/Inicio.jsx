@@ -35,11 +35,12 @@ function Inicio({ tareas, telefono, onGuardar, onEliminar, onAbrirTelefono }) {
     const guardada = await onGuardar(datosTarea, idEnEdicion)
 
     if (!guardada) {
-      return
+      return false
     }
 
     setIdEnEdicion(null)
     setSidebarAbierta(false)
+    return true
   }
 
   async function eliminarTarea(id) {
@@ -75,7 +76,6 @@ function Inicio({ tareas, telefono, onGuardar, onEliminar, onAbrirTelefono }) {
             <Sidebar
               abierta={sidebarAbierta}
               onAbrir={() => setSidebarAbierta(true)}
-              onCerrar={() => setSidebarAbierta(false)}
               tareaEnEdicion={tareaEnEdicion}
               onGuardar={guardarTarea}
               onCancelarEdicion={cancelarEdicion}

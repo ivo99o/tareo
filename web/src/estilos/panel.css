@@ -25,9 +25,8 @@
 }
 
 .sidebar-tareo {
-  --bs-offcanvas-bg: var(--tareo-azul);
-  --bs-offcanvas-color: #e2e8f0;
-  --bs-offcanvas-border-width: 0;
+  padding: 1.5rem 1rem;
+  color: #e2e8f0;
 }
 
 .contenido-sidebar {
@@ -278,6 +277,16 @@
   color: #fff;
   font-size: 1rem;
   font-weight: 700;
+}
+
+.tarjeta-selector .form-tarea .form-control,
+.tarjeta-selector .form-tarea .form-control:focus,
+.tarjeta-selector .opcion-categoria {
+  background-color: var(--tareo-azul);
+}
+
+.tarjeta-selector .opcion-categoria.activa {
+  background-color: rgba(249, 115, 22, 0.14);
 }
 
 .tarjeta-selector-cabecera p {
