@@ -1,6 +1,6 @@
 import { Button } from 'react-bootstrap'
 import useAuth from '../hooks/useAuth'
-import { obtenerMensajeDeErrorAuth } from '../utils/auth'
+import { describirErrorAuth } from '../utils/auth'
 
 function IconoGoogle() {
   return (
@@ -20,7 +20,7 @@ function BotonGoogle({ onError }) {
     try {
       await iniciarSesionConGoogle()
     } catch (fallo) {
-      onError(obtenerMensajeDeErrorAuth(fallo))
+      onError(describirErrorAuth(fallo))
     }
   }
 

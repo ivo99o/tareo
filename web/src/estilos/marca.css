@@ -1,0 +1,61 @@
+:root {
+  --tareo-azul: #0f172a;
+  --tareo-azul-medio: #1e293b;
+  --tareo-gris: #64748b;
+  --tareo-naranja: #f97316;
+  --tareo-naranja-oscuro: #ea580c;
+}
+
+.fondo-auth {
+  background-color: var(--tareo-azul);
+  background-image:
+    radial-gradient(48rem 26rem at 90% -8%, rgba(249, 115, 22, 0.28), transparent 65%),
+    radial-gradient(44rem 28rem at -10% 110%, rgba(100, 116, 139, 0.32), transparent 65%);
+}
+
+.tarjeta-auth {
+  max-width: 26rem;
+}
+
+.tarjeta-auth .form-control {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.tarjeta-auth .form-control:focus {
+  background-color: #fff;
+  border-color: var(--tareo-naranja);
+  box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+}
+
+.tarjeta-auth .form-control.is-invalid:focus {
+  border-color: var(--bs-form-invalid-border-color);
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
+}
+
+.tarjeta-auth .invalid-feedback {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.tarjeta-auth a:not(.btn) {
+  color: var(--tareo-naranja-oscuro);
+  font-weight: 600;
+}
+
+.btn-tareo {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--tareo-naranja);
+  --bs-btn-border-color: var(--tareo-naranja);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--tareo-naranja-oscuro);
+  --bs-btn-hover-border-color: var(--tareo-naranja-oscuro);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #c2410c;
+  --bs-btn-active-border-color: #c2410c;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--tareo-naranja);
+  --bs-btn-disabled-border-color: var(--tareo-naranja);
+  --bs-btn-focus-shadow-rgb: 249, 115, 22;
+  font-weight: 600;
+}
