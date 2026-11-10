@@ -6,6 +6,11 @@
   --tareo-naranja-oscuro: #ea580c;
 }
 
+.pantalla-completa {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 .fondo-auth {
   background-color: var(--tareo-azul);
   background-image:
@@ -15,6 +20,12 @@
 
 .tarjeta-auth {
   max-width: 26rem;
+}
+
+@media (max-width: 575.98px) {
+  .logo-auth {
+    height: 36px;
+  }
 }
 
 .tarjeta-auth .form-control {
