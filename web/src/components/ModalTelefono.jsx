@@ -103,20 +103,9 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
         </Modal.Body>
 
         <Modal.Footer>
-          {guardado ? (
-            <Button variant="tareo" onClick={onCerrar}>
-              Cerrar
-            </Button>
-          ) : (
-            <>
-              <Button variant="outline-secondary" onClick={onCerrar}>
-                Ahora no
-              </Button>
-              <Button type="submit" variant="tareo" disabled={guardando}>
-                {guardando ? 'Guardando...' : 'Guardar'}
-              </Button>
-            </>
-          )}
+          <Button type="submit" variant="tareo" disabled={guardando}>
+            {guardando ? 'Guardando...' : 'Guardar'}
+          </Button>
         </Modal.Footer>
       </Form>
     </Modal>
