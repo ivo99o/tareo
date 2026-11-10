@@ -14,6 +14,7 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
   const [telefono, setTelefono] = useState(telefonoActual ?? '')
   const [error, setError] = useState('')
   const [guardando, setGuardando] = useState(false)
+  const [guardado, setGuardado] = useState(false)
 
   async function manejarEnvio(evento) {
     evento.preventDefault()
@@ -27,16 +28,16 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
     }
 
     setGuardando(true)
-    const guardado = await onGuardar(telefono.trim())
+    const seGuardo = await onGuardar(telefono.trim())
     setGuardando(false)
 
-    if (guardado) {
-      onCerrar()
+    if (seGuardo) {
+      setGuardado(true)
     }
   }
 
   return (
-    <Modal show={abierto} onHide={onCerrar} centered contentClassName="modal-tareo">
+    <Modal show={abierto} onHide={onCerrar} onExited={() => setGuardado(false)} centered contentClassName="modal-tareo">
       <Form noValidate onSubmit={manejarEnvio}>
         <Modal.Header closeButton>
           <span className="modal-tareo-icono">
@@ -60,18 +61,31 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
               onChange={(evento) => {
                 setTelefono(evento.target.value)
                 setError('')
+                setGuardado(false)
               }}
               isInvalid={Boolean(error)}
               placeholder="Ej: 3815551234"
               autoComplete="tel"
             />
             <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+            {guardado && (
+              <p className="guardado-ok">
+                <Icono nombre="tilde" tam={14} />
+                Número guardado
+              </p>
+            )}
           </Form.Group>
 
-          <Alert variant="warning" className="alerta-sandbox">
+          <Alert variant="warning" className={`alerta-sandbox ${guardado ? 'destacada' : ''}`}>
             <p className="mb-2">
-              Para recibir los mensajes tenés que unirte al sandbox de Twilio una sola vez. Es un requisito de su modo
-              de prueba.
+              {guardado ? (
+                <>
+                  <strong>Último paso:</strong> abrí WhatsApp y mandá el mensaje de unión para activar los avisos. Es
+                  una sola vez.
+                </>
+              ) : (
+                'Para recibir los mensajes tenés que unirte al sandbox de Twilio una sola vez. Es un requisito de su modo de prueba.'
+              )}
             </p>
 
             {ENLACE_SANDBOX && (
@@ -89,12 +103,20 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="outline-secondary" onClick={onCerrar}>
-            Ahora no
-          </Button>
-          <Button type="submit" variant="tareo" disabled={guardando}>
-            {guardando ? 'Guardando...' : 'Guardar'}
-          </Button>
+          {guardado ? (
+            <Button variant="tareo" onClick={onCerrar}>
+              Cerrar
+            </Button>
+          ) : (
+            <>
+              <Button variant="outline-secondary" onClick={onCerrar}>
+                Ahora no
+              </Button>
+              <Button type="submit" variant="tareo" disabled={guardando}>
+                {guardando ? 'Guardando...' : 'Guardar'}
+              </Button>
+            </>
+          )}
         </Modal.Footer>
       </Form>
     </Modal>
