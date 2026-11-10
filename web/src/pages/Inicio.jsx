@@ -64,13 +64,13 @@ function Inicio({ tareas, telefono, onGuardar, onEliminar, onAbrirTelefono }) {
   const inicial = usuario.email.charAt(0).toUpperCase()
 
   return (
-    <Container as="main" fluid className="fondo-panel min-vh-100 p-0">
+    <Container as="main" fluid className="fondo-panel pagina-panel p-0">
       <Seo
         titulo="tareo | Organizá tus tareas por categoría y fecha"
         descripcion="Creá, editá y filtrá tus tareas por categoría. Cada tarea cambia de color según qué tan cerca está su fecha objetivo."
       />
 
-      <Row className="g-0 min-vh-100 align-content-start align-content-lg-stretch">
+      <Row className="g-0 fila-panel align-content-start align-content-lg-stretch">
         <Col lg={3} className="panel-lateral">
           <div className="panel-lateral-fijo">
             <Sidebar
@@ -83,7 +83,8 @@ function Inicio({ tareas, telefono, onGuardar, onEliminar, onAbrirTelefono }) {
           </div>
         </Col>
 
-        <Col as="section" lg={9} className="py-4 px-3 px-md-4">
+        <Col as="section" lg={9} className="contenido-principal">
+          <div className="cabecera-fija">
           <header className="barra-usuario">
             <img src="/tareo-logo.svg" alt="tareo" height="30" className="d-lg-none" />
 
@@ -126,13 +127,16 @@ function Inicio({ tareas, telefono, onGuardar, onEliminar, onAbrirTelefono }) {
             onCambiarCategoria={setFiltroCategoriaActivo}
             onAlternarPendientes={() => setSoloPendientes((actual) => !actual)}
           />
+          </div>
 
-          <ListaTareas
-            tareas={tareasAMostrar}
-            hayTareas={tareas.length > 0}
-            onEditar={iniciarEdicion}
-            onEliminar={eliminarTarea}
-          />
+          <div className="zona-lista">
+            <ListaTareas
+              tareas={tareasAMostrar}
+              hayTareas={tareas.length > 0}
+              onEditar={iniciarEdicion}
+              onEliminar={eliminarTarea}
+            />
+          </div>
         </Col>
       </Row>
     </Container>
