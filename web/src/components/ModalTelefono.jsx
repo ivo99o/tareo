@@ -5,6 +5,10 @@ import Icono from './Icono'
 
 const NUMERO_SANDBOX = import.meta.env.VITE_TWILIO_SANDBOX_NUMBER
 const CODIGO_SANDBOX = import.meta.env.VITE_TWILIO_SANDBOX_CODIGO
+const ENLACE_SANDBOX =
+  NUMERO_SANDBOX && CODIGO_SANDBOX
+    ? `https://wa.me/${NUMERO_SANDBOX.replace(/\D/g, '')}?text=${encodeURIComponent(CODIGO_SANDBOX)}`
+    : null
 
 function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
   const [telefono, setTelefono] = useState(telefonoActual ?? '')
@@ -65,9 +69,22 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
           </Form.Group>
 
           <Alert variant="warning" className="alerta-sandbox">
-            Para recibir los mensajes tenés que unirte al sandbox de Twilio una sola vez: desde tu WhatsApp, enviá{' '}
-            <strong>{CODIGO_SANDBOX}</strong> al número <strong>{NUMERO_SANDBOX}</strong>. Es un requisito de Twilio
-            para su modo de prueba.
+            <p className="mb-2">
+              Para recibir los mensajes tenés que unirte al sandbox de Twilio una sola vez. Es un requisito de su modo
+              de prueba.
+            </p>
+
+            {ENLACE_SANDBOX && (
+              <a className="enlace-wsp" href={ENLACE_SANDBOX} target="_blank" rel="noopener noreferrer">
+                <Icono nombre="mensaje" tam={16} />
+                Abrir WhatsApp y unirme
+              </a>
+            )}
+
+            <p className="mt-2 mb-0">
+              {ENLACE_SANDBOX ? 'Si no se abre, enviá' : 'Desde tu WhatsApp, enviá'} <strong>{CODIGO_SANDBOX}</strong> al
+              número <strong>{NUMERO_SANDBOX}</strong>.
+            </p>
           </Alert>
         </Modal.Body>
 
