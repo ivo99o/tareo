@@ -316,8 +316,7 @@
   display: grid;
   place-items: center;
   padding: 1rem;
-  background-color: rgba(2, 6, 23, 0.65);
-  backdrop-filter: blur(2px);
+  background-color: rgba(2, 6, 23, 0.78);
 }
 
 .tarjeta-selector {

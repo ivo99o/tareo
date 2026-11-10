@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Form } from 'react-bootstrap'
 import { horaActual } from '../utils/tareas'
 import CalendarioMes from './CalendarioMes'
@@ -83,7 +84,7 @@ function AsistenteTarea({ pasos, pasoInicial, formulario, editando, onCerrar }) 
   const textoFinal = editando ? 'Guardar cambios' : 'Crear tarea'
   const siguienteDeshabilitado = paso === 'fecha' && !fecha
 
-  return (
+  return createPortal(
     <div
       className="superposicion-selector"
       onMouseDown={(evento) => {
@@ -179,7 +180,8 @@ function AsistenteTarea({ pasos, pasoInicial, formulario, editando, onCerrar }) 
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 
