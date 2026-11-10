@@ -1,33 +1,50 @@
-import { Button } from 'react-bootstrap'
 import { NOMBRES_CATEGORIA } from '../utils/tareas'
+import Icono from './Icono'
 
-function Filtros({ filtroCategoriaActivo, soloPendientes, onCambiarCategoria, onAlternarPendientes }) {
+const ICONOS_CATEGORIA = {
+  todos: 'lista',
+  laboral: 'maletin',
+  estudio: 'birrete',
+  recordatorio: 'campana',
+}
+
+function Filtros({ filtroCategoriaActivo, soloPendientes, conteos, onCambiarCategoria, onAlternarPendientes }) {
+  const categorias = [['todos', 'Todos'], ...Object.entries(NOMBRES_CATEGORIA)]
+
   return (
-    <div className="d-grid gap-2 d-lg-flex flex-lg-wrap justify-content-lg-center mb-4" role="group" aria-label="Filtrar tareas por categoría y estado">
-      <Button
-        variant={filtroCategoriaActivo === 'todos' ? 'dark' : 'outline-dark'}
-        onClick={() => onCambiarCategoria('todos')}
-      >
-        Todos
-      </Button>
+    <div className="barra-filtros" role="group" aria-label="Filtrar tareas por categoría y estado">
+      <div className="filtros-categorias">
+        {categorias.map(([valor, nombre]) => {
+          const activo = filtroCategoriaActivo === valor
 
-      {Object.entries(NOMBRES_CATEGORIA).map(([valor, nombre]) => (
-        <Button
-          key={valor}
-          variant={filtroCategoriaActivo === valor ? 'dark' : 'outline-dark'}
-          onClick={() => onCambiarCategoria(valor)}
-        >
-          {nombre}
-        </Button>
-      ))}
+          return (
+            <button
+              key={valor}
+              type="button"
+              className={`filtro ${activo ? 'activo' : ''}`}
+              aria-pressed={activo}
+              onClick={() => onCambiarCategoria(valor)}
+            >
+              <Icono nombre={ICONOS_CATEGORIA[valor]} tam={16} />
+              <span>{nombre}</span>
+              <span className="filtro-conteo">{conteos[valor] ?? 0}</span>
+            </button>
+          )
+        })}
+      </div>
 
-      <Button
-        variant={soloPendientes ? 'dark' : 'outline-dark'}
-        aria-pressed={soloPendientes}
+      <button
+        type="button"
+        className={`interruptor ${soloPendientes ? 'activo' : ''}`}
+        role="switch"
+        aria-checked={soloPendientes}
         onClick={onAlternarPendientes}
       >
-        Pendiente
-      </Button>
+        <span className="interruptor-pista" aria-hidden="true">
+          <span className="interruptor-perilla" />
+        </span>
+        <span>Solo pendientes</span>
+      </button>
     </div>
   )
 }

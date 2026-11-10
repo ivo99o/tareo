@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Alert, Button, Form, Modal } from 'react-bootstrap'
+import { validarTelefono } from '../utils/validaciones'
+import Icono from './Icono'
 
 const NUMERO_SANDBOX = import.meta.env.VITE_TWILIO_SANDBOX_NUMBER
 const CODIGO_SANDBOX = import.meta.env.VITE_TWILIO_SANDBOX_CODIGO
-const DIGITOS_MINIMOS = 8
 
 function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
   const [telefono, setTelefono] = useState(telefonoActual ?? '')
@@ -14,10 +15,10 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
     evento.preventDefault()
     setError('')
 
-    const digitos = telefono.replace(/\D/g, '')
+    const mensajeError = validarTelefono(telefono)
 
-    if (digitos.length < DIGITOS_MINIMOS) {
-      setError('Ingresá un número de teléfono válido.')
+    if (mensajeError) {
+      setError(mensajeError)
       return
     }
 
@@ -31,34 +32,39 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
   }
 
   return (
-    <Modal show={abierto} onHide={onCerrar} centered>
-      <Form onSubmit={manejarEnvio}>
+    <Modal show={abierto} onHide={onCerrar} centered contentClassName="modal-tareo">
+      <Form noValidate onSubmit={manejarEnvio}>
         <Modal.Header closeButton>
-          <Modal.Title as="h2" className="h5">
+          <span className="modal-tareo-icono">
+            <Icono nombre="mensaje" tam={22} />
+          </span>
+          <Modal.Title as="h2" className="h5 mb-0">
             Avisos por WhatsApp
           </Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <p>
+          <p className="text-body-secondary">
             Cargá tu número y te avisamos por WhatsApp cuando una tarea esté por vencer o ya haya vencido.
           </p>
 
-          {error && <Alert variant="danger">{error}</Alert>}
-
           <Form.Group controlId="telefonoPerfil" className="mb-3">
-            <Form.Label>Teléfono</Form.Label>
+            <Form.Label className="fw-semibold small">Teléfono</Form.Label>
             <Form.Control
               type="tel"
               value={telefono}
-              onChange={(evento) => setTelefono(evento.target.value)}
+              onChange={(evento) => {
+                setTelefono(evento.target.value)
+                setError('')
+              }}
+              isInvalid={Boolean(error)}
               placeholder="Ej: 3815551234"
               autoComplete="tel"
-              required
             />
+            <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
           </Form.Group>
 
-          <Alert variant="info" className="mb-0 small">
+          <Alert variant="warning" className="alerta-sandbox">
             Para recibir los mensajes tenés que unirte al sandbox de Twilio una sola vez: desde tu WhatsApp, enviá{' '}
             <strong>{CODIGO_SANDBOX}</strong> al número <strong>{NUMERO_SANDBOX}</strong>. Es un requisito de Twilio
             para su modo de prueba.
@@ -69,7 +75,7 @@ function ModalTelefono({ abierto, telefonoActual, onGuardar, onCerrar }) {
           <Button variant="outline-secondary" onClick={onCerrar}>
             Ahora no
           </Button>
-          <Button type="submit" variant="primary" disabled={guardando}>
+          <Button type="submit" variant="tareo" disabled={guardando}>
             {guardando ? 'Guardando...' : 'Guardar'}
           </Button>
         </Modal.Footer>

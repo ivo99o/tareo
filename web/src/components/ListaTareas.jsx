@@ -1,10 +1,21 @@
 import { Col, Row } from 'react-bootstrap'
+import Icono from './Icono'
 import TarjetaTarea from './TarjetaTarea'
 
-function ListaTareas({ tareas, onEditar, onEliminar }) {
+function ListaTareas({ tareas, hayTareas, onEditar, onEliminar }) {
   if (tareas.length === 0) {
     return (
-      <p className="text-center text-muted mb-0">No hay tareas que coincidan con estos filtros.</p>
+      <div className="estado-vacio">
+        <span className="estado-vacio-icono">
+          <Icono nombre="portapapeles" tam={28} />
+        </span>
+        <h2 className="h6 mb-1">{hayTareas ? 'No hay tareas con este filtro' : 'Todavía no tenés tareas'}</h2>
+        <p className="mb-0">
+          {hayTareas
+            ? 'Probá con otra categoría o desactivá "Solo pendientes".'
+            : 'Creá la primera con el formulario "Nueva tarea" (en el celular, con el botón +).'}
+        </p>
+      </div>
     )
   }
 
