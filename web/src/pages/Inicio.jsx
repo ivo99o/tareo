@@ -100,13 +100,14 @@ function Inicio({ tareas, telefono, onGuardar, onEliminar, onAbrirTelefono }) {
                 onClick={onAbrirTelefono}
               >
                 <Icono nombre="mensaje" tam={16} />
-                <span>{telefono ? 'Avisos activos' : 'Activar avisos'}</span>
+                <span className="d-none d-sm-inline">{telefono ? 'Avisos activos' : 'Activar avisos'}</span>
+                <span className="d-sm-none">{telefono ? 'Avisos' : 'Activar'}</span>
                 <span className="punto-aviso" aria-hidden="true" />
               </button>
 
-              <button type="button" className="boton-salir" onClick={cerrarSesion}>
+              <button type="button" className="boton-salir" onClick={cerrarSesion} aria-label="Cerrar sesión">
                 <Icono nombre="salir" tam={16} />
-                <span>Salir</span>
+                <span className="d-none d-sm-inline">Salir</span>
               </button>
             </div>
           </header>

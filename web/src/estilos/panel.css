@@ -18,6 +18,12 @@
   }
 }
 
+@media (min-width: 992px) {
+  .fila-panel {
+    min-height: 100vh;
+  }
+}
+
 @media (max-width: 991.98px) and (min-height: 601px) {
   .pagina-panel {
     height: 100vh;
@@ -806,6 +812,8 @@
 }
 
 .boton-salir {
+  padding-right: 0.7rem;
+  padding-left: 0.7rem;
   background: transparent;
   border: 1px solid transparent;
   color: #64748b;
