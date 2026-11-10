@@ -1,39 +1,38 @@
-import { Button, Col, Offcanvas, Row } from 'react-bootstrap'
+import { Offcanvas } from 'react-bootstrap'
 import FormularioTarea from './FormularioTarea'
+import Icono from './Icono'
 
-function Sidebar({ abierta, onAbrir, onCerrar, tareaEnEdicion, onGuardar }) {
+function Sidebar({ abierta, onAbrir, onCerrar, tareaEnEdicion, onGuardar, onCancelarEdicion }) {
   return (
     <>
       {!abierta && (
-        <Button
-          variant="primary"
-          className="d-lg-none position-fixed bottom-0 end-0 z-3 m-4 rounded-circle px-3 py-2 fs-2 lh-1 shadow"
-          aria-label="Agregar tarea"
-          onClick={onAbrir}
-        >
-          +
-        </Button>
+        <button type="button" className="boton-flotante d-lg-none" aria-label="Agregar tarea" onClick={onAbrir}>
+          <Icono nombre="plus" tam={28} />
+        </button>
       )}
 
-      <Offcanvas
-        show={abierta}
-        onHide={onCerrar}
-        responsive="lg"
-        placement="top"
-        className="vh-100 text-bg-dark"
-      >
+      <Offcanvas show={abierta} onHide={onCerrar} responsive="lg" placement="top" className="sidebar-tareo vh-100">
         <Offcanvas.Header closeButton closeVariant="white" />
 
         <Offcanvas.Body className="py-4 px-3">
-          <Row className="g-0 w-100 justify-content-center">
-            <Col xs={12} sm={8} md={6} lg={12} xl={10}>
-              <div className="text-center mb-4">
-                <h2 className="h4 d-inline-block border-bottom border-2 pb-1">Agregar Tarea</h2>
-              </div>
+          <div className="contenido-sidebar">
+            <div className="d-none d-lg-block text-center mb-4">
+              <img src="/tareo-logo-claro.svg" alt="tareo" height="40" />
+            </div>
 
-              <FormularioTarea tareaEnEdicion={tareaEnEdicion} onGuardar={onGuardar} />
-            </Col>
-          </Row>
+            <div className="titulo-sidebar">
+              <h2 className="h5 mb-0">{tareaEnEdicion ? 'Editar tarea' : 'Nueva tarea'}</h2>
+              <p className="mb-0">
+                {tareaEnEdicion ? 'Cambiá lo que necesites y guardá.' : 'Completá los datos y listo.'}
+              </p>
+            </div>
+
+            <FormularioTarea
+              tareaEnEdicion={tareaEnEdicion}
+              onGuardar={onGuardar}
+              onCancelar={onCancelarEdicion}
+            />
+          </div>
         </Offcanvas.Body>
       </Offcanvas>
     </>

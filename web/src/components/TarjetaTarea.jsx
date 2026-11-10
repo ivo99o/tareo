@@ -1,51 +1,64 @@
-import { Card } from 'react-bootstrap'
-import { NOMBRES_CATEGORIA, calcularEstado } from '../utils/tareas'
+import Swal from 'sweetalert2'
+import { NOMBRES_CATEGORIA, calcularEstado, describirTiempo, formatearDiaCorto, formatearHora } from '../utils/tareas'
 import BotonEditar from './BotonEditar'
 import BotonEliminar from './BotonEliminar'
+import Icono from './Icono'
+
+const ICONOS_CATEGORIA = {
+  laboral: 'maletin',
+  estudio: 'birrete',
+  recordatorio: 'campana',
+}
 
 function TarjetaTarea({ tarea, onEditar, onEliminar }) {
   const estado = calcularEstado(tarea.fechaObjetivo)
 
-  const fechaLegible = tarea.fechaObjetivo.toLocaleString('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  async function manejarEliminar() {
+    const { isConfirmed } = await Swal.fire({
+      icon: 'warning',
+      title: '¿Eliminar esta tarea?',
+      text: tarea.titulo,
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      focusCancel: true,
+    })
 
-  function manejarEliminar() {
-    const confirmado = confirm('¿Seguro que querés eliminar esta tarea?')
-    if (!confirmado) return
-
-    onEliminar(tarea.id)
+    if (isConfirmed) {
+      onEliminar(tarea.id)
+    }
   }
 
   return (
-    <Card
-      as="article"
-      className={`h-100 bg-white border-0 border-start border-5 shadow ${estado.clase}`}
-      style={estado.estilo}
-    >
-      <Card.Body className="text-center d-flex flex-column">
-        <Card.Title as="h2" className="h5 mb-2 text-break">
-          {tarea.titulo}
-        </Card.Title>
-        <div className="text-start">
-          <Card.Text className="small mb-1">
-            🏷️ Categoría: <strong>{NOMBRES_CATEGORIA[tarea.categoria] || tarea.categoria}</strong>
-          </Card.Text>
-          <Card.Text className="small mb-1">📅 Fecha objetivo: {fechaLegible}</Card.Text>
-          <Card.Text className="small mb-0">
-            {estado.icono} Estado: <strong>{estado.texto}</strong>
-          </Card.Text>
+    <article className="tarjeta-tarea" style={{ '--color-estado': estado.color, '--fondo-estado': estado.fondo }}>
+      <div className="tarjeta-tarea-cabecera">
+        <span className="etiqueta-categoria">
+          <Icono nombre={ICONOS_CATEGORIA[tarea.categoria] ?? 'lista'} tam={14} />
+          {NOMBRES_CATEGORIA[tarea.categoria] || tarea.categoria}
+        </span>
+        <span className="insignia-estado">
+          <span className="punto-estado" aria-hidden="true" />
+          {estado.etiqueta}
+        </span>
+      </div>
+
+      <h2 className="tarjeta-tarea-titulo">{tarea.titulo}</h2>
+
+      <div className="tarjeta-tarea-pie">
+        <div className="tarjeta-tarea-fecha">
+          <Icono nombre="calendario" tam={15} />
+          <span>
+            {formatearDiaCorto(tarea.fechaObjetivo)} · {formatearHora(tarea.fechaObjetivo)}
+            <small>{describirTiempo(tarea.fechaObjetivo)}</small>
+          </span>
         </div>
-        <div className="d-flex justify-content-center gap-2 mt-auto pt-3">
-          <BotonEliminar onClick={manejarEliminar} />
+
+        <div className="tarjeta-tarea-acciones">
           <BotonEditar onClick={() => onEditar(tarea.id)} />
+          <BotonEliminar onClick={manejarEliminar} />
         </div>
-      </Card.Body>
-    </Card>
+      </div>
+    </article>
   )
 }
 

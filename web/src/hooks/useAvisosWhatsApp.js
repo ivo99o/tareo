@@ -15,7 +15,7 @@ function useAvisosWhatsApp(tareas, avisosActivos) {
 
       setAvisos((actuales) => [
         ...actuales,
-        { id, fase: 'enviando', titulo: tarea.titulo, estado: estado.texto },
+        { id, fase: 'enviando', titulo: tarea.titulo, estado: estado.frase },
       ])
 
       try {

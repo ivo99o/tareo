@@ -33,19 +33,67 @@ export function calcularEstado(fechaObjetivo) {
   const horasRestantes = (fechaObjetivo.getTime() - Date.now()) / (60 * 60 * 1000)
 
   if (horasRestantes < 0) {
-    return { clase: 'border-danger', clave: 'vencida', texto: 'VENCIDA', icono: '🔴' }
+    return {
+      clave: 'vencida',
+      texto: 'VENCIDA',
+      etiqueta: 'Vencida',
+      frase: 'venció',
+      color: '#dc2626',
+      fondo: '#fee2e2',
+    }
   }
   if (horasRestantes <= 12) {
     return {
-      clase: '',
-      estilo: { '--bs-border-color': 'var(--bs-orange)' },
       clave: 'naranja',
       texto: 'NARANJA',
-      icono: '🟠',
+      etiqueta: 'Menos de 12 h',
+      frase: 'vence en menos de 12 horas',
+      color: '#ea580c',
+      fondo: '#ffedd5',
     }
   }
   if (horasRestantes <= 24) {
-    return { clase: 'border-warning', clave: 'amarilla', texto: 'AMARILLO', icono: '🟡' }
+    return {
+      clave: 'amarilla',
+      texto: 'AMARILLO',
+      etiqueta: 'Menos de 24 h',
+      frase: 'vence en menos de 24 horas',
+      color: '#ca8a04',
+      fondo: '#fef9c3',
+    }
   }
-  return { clase: 'border-dark', clave: 'pendiente', texto: 'PENDIENTE', icono: '⚫' }
+  return {
+    clave: 'pendiente',
+    texto: 'PENDIENTE',
+    etiqueta: 'Pendiente',
+    frase: 'está pendiente',
+    color: '#1e293b',
+    fondo: '#e2e8f0',
+  }
+}
+
+export function describirTiempo(fechaObjetivo) {
+  const minutos = Math.round((fechaObjetivo.getTime() - Date.now()) / 60000)
+  const absoluto = Math.abs(minutos)
+
+  let cantidad
+  if (absoluto < 1) {
+    return 'ahora'
+  } else if (absoluto < 60) {
+    cantidad = `${absoluto} min`
+  } else if (absoluto < 48 * 60) {
+    cantidad = `${Math.round(absoluto / 60)} h`
+  } else {
+    cantidad = `${Math.round(absoluto / (24 * 60))} días`
+  }
+
+  return minutos > 0 ? `en ${cantidad}` : `hace ${cantidad}`
+}
+
+export function formatearDiaCorto(fecha) {
+  return fecha.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short' })
+}
+
+export function formatearHora(fecha) {
+  return fecha.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })
 }

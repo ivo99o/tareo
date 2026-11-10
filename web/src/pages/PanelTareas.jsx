@@ -23,6 +23,7 @@ function PanelTareas() {
     <>
       <Inicio
         tareas={tareas}
+        telefono={telefono}
         onGuardar={guardarTarea}
         onEliminar={eliminarTarea}
         onAbrirTelefono={() => setModalAbierto(true)}

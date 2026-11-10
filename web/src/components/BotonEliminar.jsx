@@ -1,10 +1,10 @@
-import { Button } from 'react-bootstrap'
+import Icono from './Icono'
 
 function BotonEliminar({ onClick }) {
   return (
-    <Button variant="dark" size="sm" onClick={onClick}>
-      Eliminar
-    </Button>
+    <button type="button" className="boton-icono boton-icono-eliminar" onClick={onClick} aria-label="Eliminar tarea" title="Eliminar">
+      <Icono nombre="basura" tam={16} />
+    </button>
   )
 }
 
